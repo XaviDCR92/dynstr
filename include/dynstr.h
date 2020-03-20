@@ -39,9 +39,14 @@
 #define dynstr_append_or_ret_false(d, format, ...) if (dynstr_append(d, format, ## __VA_ARGS__)) return false;
 
 /**
- * Convenience macro that calls dynstr_append and returns one if failed.
+ * Convenience macro that calls dynstr_append and returns its error code if failed.
  */
-#define dynstr_append_or_ret_nonzero(d, format, ...) if (dynstr_append(d, format, ## __VA_ARGS__)) return 1;
+#define dynstr_append_or_ret(d, format, ...) {const int err = dynstr_append(d, format, ## __VA_ARGS__); if (err) return err;}
+
+/**
+ * Convenience macro that calls dynstr_append and returns zero if failed.
+ */
+#define dynstr_append_or_ret_zero(d, format, ...) if (dynstr_append(d, format, ## __VA_ARGS__)) return 0;
 
 #endif /* __GNUC__ */
 
