@@ -38,12 +38,12 @@ int dynstr_append(struct dynstr *const d, const char *const format, ...)
     if (!d->str)
     {
         new_len = src_len + 1;
-        d->str = calloc(src_len + 1, sizeof *d->str);
+        d->str = malloc(new_len * sizeof *d->str);
     }
     else
     {
         new_len = d->len + src_len + 1;
-        d->str = realloc(d->str, (d->len + src_len) * sizeof *d->str);
+        d->str = realloc(d->str, new_len * sizeof *d->str);
     }
 
     if (d->str)
