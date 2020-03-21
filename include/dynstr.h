@@ -61,8 +61,8 @@
  */
 struct dynstr
 {
-    char *str; /**< Null-terminated string. */
-    size_t len; /**< String length, null character not included. */
+   char *str; /**< Null-terminated string. */
+   size_t len; /**< String length, null character not included. */
 };
 
 /**
