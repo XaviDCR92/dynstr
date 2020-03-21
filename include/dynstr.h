@@ -108,6 +108,13 @@ enum dynstr_err dynstr_append(struct dynstr *d, const char *format, ...);
  *    # DYNSTR_ERR_ALLOC if no more memory is available.
  *    # DYNSTR_ERR_INIT if destination dynamic string was not initialized.
  *    # DYNSTR_ERR_SRC if source dynamic string has no length or data.
+ * @note This function has the same effect as calling:
+ * @code
+ *    dynstr_append(&dst, "%s", src.str);
+ * @endcode
+ * However, the implementation for dynstr_dup() should be faster as it
+ * does not rely on vsnprintf(), as opposed to dynstr_append(). If in
+ * doubt, always profile your code.
  */
 enum dynstr_err dynstr_dup(struct dynstr *dst, const struct dynstr *src);
 
