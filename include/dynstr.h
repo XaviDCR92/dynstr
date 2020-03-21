@@ -19,7 +19,7 @@
 
 #include <stddef.h>
 
-#if __STDC_VERSION < 199901L
+#if __STDC_VERSION__ < 199901L
 #error C99 support is mandatory for dynstr
 #endif /* __STDC_VERSION < 199901L */
 
