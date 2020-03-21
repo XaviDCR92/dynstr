@@ -19,6 +19,10 @@
 
 #include <stddef.h>
 
+#if __STDC_VERSION < 199901L
+#error C99 support is mandatory for dynstr
+#endif /* __STDC_VERSION < 199901L */
+
 #ifdef __GNUC__
 
 /* Since dynstr_append() might fail (as it is based on dynamic memory
