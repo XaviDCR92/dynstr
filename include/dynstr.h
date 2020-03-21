@@ -45,7 +45,7 @@
 /**
  * Convenience macro that calls dynstr_append and returns its error code if failed.
  */
-#define dynstr_append_or_ret(d, format, ...) {const int err = dynstr_append(d, format, ## __VA_ARGS__); if (err) return err;}
+#define dynstr_append_or_ret(d, format, ...) {const enum dynstr_err err = dynstr_append(d, format, ## __VA_ARGS__); if (err) return err;}
 
 /**
  * Convenience macro that calls dynstr_append and returns zero if failed.
@@ -66,6 +66,19 @@ struct dynstr
 };
 
 /**
+ * List of errors that this library might return.
+ * @note If using GNU C extensions, this errors can be translated into other
+ * types by using the convenience macros above.
+ */
+enum dynstr_err
+{
+   DYNSTR_OK, /**< Operation was successful. */
+   DYNSTR_ERR_ALLOC, /**< Alloc operation failed. */
+   DYNSTR_ERR_INIT, /**< Dynamic string was not initialized. */
+   DYNSTR_ERR_SRC /**< Source string has invalid parameters. */
+};
+
+/**
  * Reportedly, it initializes an empty string with zero length.
  * @attention Always call this function when creating a dynstr instance.
  * @param d Dynamic string to be initialized.
@@ -78,9 +91,25 @@ void dynstr_init(struct dynstr *d);
  * dynamic string.
  * @param d Dynamic string where new string will be appended.
  * @param format String literal in printf format.
- * @return Returns 0 if successful, 1 if alloc operation failed.
+ * @return Returns one of the following error codes:
+ *    # DYNSTR_OK if successful.
+ *    # DYNSTR_ERR_ALLOC if no more memory is available.
  */
-int dynstr_append(struct dynstr *d, const char *format, ...);
+enum dynstr_err dynstr_append(struct dynstr *d, const char *format, ...);
+
+/**
+ * This function duplicates a dynamic string to another instance.
+ * @attention Destination instance must be initialized before calling
+ * this function.
+ * @attention Since this function performs a deep copy, please remember to
+ * free the source instance if no longer used to avoid memory leaks.
+ * @return Returns one of the following error codes:
+ *    # DYNSTR_OK if successful.
+ *    # DYNSTR_ERR_ALLOC if no more memory is available.
+ *    # DYNSTR_ERR_INIT if destination dynamic string was not initialized.
+ *    # DYNSTR_ERR_SRC if source dynamic string has no length or data.
+ */
+enum dynstr_err dynstr_dup(struct dynstr *dst, const struct dynstr *src);
 
 /**
  * This function frees memory used by the dynamic string.

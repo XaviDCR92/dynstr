@@ -26,7 +26,7 @@ void dynstr_init(struct dynstr *const d)
     memset(d, 0, sizeof *d);
 }
 
-int dynstr_append(struct dynstr *const d, const char *const format, ...)
+enum dynstr_err dynstr_append(struct dynstr *const d, const char *const format, ...)
 {
     va_list ap;
 
@@ -34,19 +34,10 @@ int dynstr_append(struct dynstr *const d, const char *const format, ...)
 
     {
         const size_t src_len = vsnprintf(NULL, 0, format, ap);
-        size_t new_len;
+        const size_t new_len = d->len + src_len + 1;
         va_end(ap);
 
-        if (!d->str)
-        {
-            new_len = src_len + 1;
-            d->str = malloc(new_len * sizeof *d->str);
-        }
-        else
-        {
-            new_len = d->len + src_len + 1;
-            d->str = realloc(d->str, new_len * sizeof *d->str);
-        }
+        d->str = realloc(d->str, new_len * sizeof *d->str);
 
         if (d->str)
         {
@@ -57,11 +48,43 @@ int dynstr_append(struct dynstr *const d, const char *const format, ...)
         }
         else
         {
-            return 1;
+            return DYNSTR_ERR_ALLOC;
         }
     }
 
-    return 0;
+    return DYNSTR_OK;
+}
+
+enum dynstr_err dynstr_dup(struct dynstr *const dst, const struct dynstr *const src)
+{
+    if (!dst->str && !dst->len)
+    {
+        if (src->len && src->str)
+        {
+            const size_t sz = (src->len + 1) * sizeof *dst->str;
+            dst->str = realloc(dst->str, sz);
+
+            if (dst->str)
+            {
+                memcpy(dst->str, src->str, sz);
+                dst->len = src->len;
+            }
+            else
+            {
+                return DYNSTR_ERR_ALLOC;
+            }
+        }
+        else
+        {
+            return DYNSTR_ERR_SRC;
+        }
+    }
+    else
+    {
+        return DYNSTR_ERR_INIT;
+    }
+
+    return DYNSTR_OK;
 }
 
 void dynstr_free(struct dynstr *const d)
