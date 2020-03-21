@@ -31,31 +31,34 @@ int dynstr_append(struct dynstr *const d, const char *const format, ...)
     va_list ap;
 
     va_start(ap, format);
-    const size_t src_len = vsnprintf(NULL, 0, format, ap);
-    size_t new_len;
-    va_end(ap);
 
-    if (!d->str)
     {
-        new_len = src_len + 1;
-        d->str = malloc(new_len * sizeof *d->str);
-    }
-    else
-    {
-        new_len = d->len + src_len + 1;
-        d->str = realloc(d->str, new_len * sizeof *d->str);
-    }
-
-    if (d->str)
-    {
-        va_start(ap, format);
-        vsprintf(d->str + d->len, format, ap);
+        const size_t src_len = vsnprintf(NULL, 0, format, ap);
+        size_t new_len;
         va_end(ap);
-        d->len += src_len;
-    }
-    else
-    {
-        return 1;
+
+        if (!d->str)
+        {
+            new_len = src_len + 1;
+            d->str = malloc(new_len * sizeof *d->str);
+        }
+        else
+        {
+            new_len = d->len + src_len + 1;
+            d->str = realloc(d->str, new_len * sizeof *d->str);
+        }
+
+        if (d->str)
+        {
+            va_start(ap, format);
+            vsprintf(d->str + d->len, format, ap);
+            va_end(ap);
+            d->len += src_len;
+        }
+        else
+        {
+            return 1;
+        }
     }
 
     return 0;
