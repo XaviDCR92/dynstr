@@ -21,6 +21,10 @@
 #include <stdarg.h>
 #include <stddef.h>
 
+#if __STDC_VERSION__ < 199901L
+#error C99 support is mandatory for dynstr
+#endif /* __STDC_VERSION < 199901L */
+
 void dynstr_init(struct dynstr *const d)
 {
     memset(d, 0, sizeof *d);

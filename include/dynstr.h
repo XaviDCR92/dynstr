@@ -17,42 +17,35 @@
 #ifndef DYNSTR_H
 #define DYNSTR_H
 
-#include <stddef.h>
-
 #if __STDC_VERSION__ < 199901L
 #error C99 support is mandatory for dynstr
 #endif /* __STDC_VERSION < 199901L */
 
-#ifdef __GNUC__
+#include <stddef.h>
+#include <stdbool.h>
 
 /* Since dynstr_append() might fail (as it is based on dynamic memory
- * allocation), these macros can be used to avoid boilerplate code.
- * However, C99 variadic macros might expand with a trailing comma
- * when no parameters are given after "format", a GNU extension is
- * needed to avoid this problem. */
-#include <stdbool.h>
+ * allocation), these macros can be used to avoid boilerplate code. */
 
 /**
  * Convenience macro that calls dynstr_append and returns NULL if failed.
  */
-#define dynstr_append_or_ret_null(d, format, ...) if (dynstr_append(d, format, ## __VA_ARGS__)) return NULL;
+#define dynstr_append_or_ret_null(...) if (dynstr_append(__VA_ARGS__) != DYNSTR_OK) return NULL
 
 /**
  * Convenience macro that calls dynstr_append and returns false if failed.
  */
-#define dynstr_append_or_ret_false(d, format, ...) if (dynstr_append(d, format, ## __VA_ARGS__)) return false;
+#define dynstr_append_or_ret_false(...) if (dynstr_append(__VA_ARGS__) != DYNSTR_OK) return false
 
 /**
  * Convenience macro that calls dynstr_append and returns its error code if failed.
  */
-#define dynstr_append_or_ret(d, format, ...) {const enum dynstr_err err = dynstr_append(d, format, ## __VA_ARGS__); if (err) return err;}
+#define dynstr_append_or_ret(...) {const enum dynstr_err err = dynstr_append(__VA_ARGS__); if (err != DYNSTR_OK) return err;}
 
 /**
  * Convenience macro that calls dynstr_append and returns zero if failed.
  */
-#define dynstr_append_or_ret_zero(d, format, ...) if (dynstr_append(d, format, ## __VA_ARGS__)) return 0;
-
-#endif /* __GNUC__ */
+#define dynstr_append_or_ret_zero( ...) if (dynstr_append( __VA_ARGS__) != DYNSTR_OK) return 0
 
 /**
  * Dynamic string type used for this library.
