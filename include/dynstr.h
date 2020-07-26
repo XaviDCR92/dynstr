@@ -45,7 +45,12 @@
 /**
  * Convenience macro that calls dynstr_append and returns zero if failed.
  */
-#define dynstr_append_or_ret_zero( ...) if (dynstr_append( __VA_ARGS__) != DYNSTR_OK) return 0
+#define dynstr_append_or_ret_zero(...) if (dynstr_append(__VA_ARGS__) != DYNSTR_OK) return 0
+
+/**
+ * Convenience macro that calls dynstr_append and returns zero if failed.
+ */
+#define dynstr_append_or_ret_nonzero(...) if (dynstr_append(__VA_ARGS__) != DYNSTR_OK) return 1
 
 /**
  * Dynamic string type used for this library.
