@@ -48,7 +48,7 @@
 #define dynstr_append_or_ret_zero(...) if (dynstr_append(__VA_ARGS__) != DYNSTR_OK) return 0
 
 /**
- * Convenience macro that calls dynstr_append and returns zero if failed.
+ * Convenience macro that calls dynstr_append and returns one if failed.
  */
 #define dynstr_append_or_ret_nonzero(...) if (dynstr_append(__VA_ARGS__) != DYNSTR_OK) return 1
 
@@ -94,6 +94,18 @@ void dynstr_init(struct dynstr *d);
  *    # DYNSTR_ERR_ALLOC if no more memory is available.
  */
 enum dynstr_err dynstr_append(struct dynstr *d, const char *format, ...);
+
+/**
+ * This function takes a string literal in printf format and a variable
+ * number of arguments, calculates its size and prepends it into the
+ * beginning of the dynamic string.
+ * @param d Dynamic string where new string will be prepended.
+ * @param format String literal in printf format.
+ * @return Returns one of the following error codes:
+ *    # DYNSTR_OK if successful.
+ *    # DYNSTR_ERR_ALLOC if no more memory is available.
+ */
+enum dynstr_err dynstr_prepend(struct dynstr *d, const char *format, ...);
 
 /**
  * This function duplicates a dynamic string to another instance.
