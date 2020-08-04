@@ -17,6 +17,7 @@ int main(const int argc, const char *argv[])
     dynstr_init(&s);
     dynstr_append(&s, "Hello");
     dynstr_append(&s, " from %s:%d\n", __func__, __LINE__);
+    dynstr_prepend(&s, "Hey! ");
     printf("%s", s.str);
     dynstr_free(&s);
 
@@ -26,7 +27,7 @@ int main(const int argc, const char *argv[])
 Output:
 
 ```
-Hello from main:10
+Hey! Hello from main:10
 ```
 # License
 See LICENSE file.
