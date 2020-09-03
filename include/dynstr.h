@@ -30,12 +30,14 @@
 /**
  * Convenience macro that calls dynstr_append and returns NULL if failed.
  */
-#define dynstr_append_or_ret_null(...) if (dynstr_append(__VA_ARGS__) != DYNSTR_OK) return NULL
+#define dynstr_append_or_ret_null(...) \
+   do {if (dynstr_append(__VA_ARGS__) != DYNSTR_OK) return NULL;} while (0)
 
 /**
  * Convenience macro that calls dynstr_append and returns false if failed.
  */
-#define dynstr_append_or_ret_false(...) if (dynstr_append(__VA_ARGS__) != DYNSTR_OK) return false
+#define dynstr_append_or_ret_false(...) \
+   do {if (dynstr_append(__VA_ARGS__) != DYNSTR_OK) return false;} while (0)
 
 /**
  * Convenience macro that calls dynstr_append and returns its error code if failed.
@@ -45,12 +47,14 @@
 /**
  * Convenience macro that calls dynstr_append and returns zero if failed.
  */
-#define dynstr_append_or_ret_zero(...) if (dynstr_append(__VA_ARGS__) != DYNSTR_OK) return 0
+#define dynstr_append_or_ret_zero(...) \
+   do {if (dynstr_append(__VA_ARGS__) != DYNSTR_OK) return 0;} while (0)
 
 /**
  * Convenience macro that calls dynstr_append and returns one if failed.
  */
-#define dynstr_append_or_ret_nonzero(...) if (dynstr_append(__VA_ARGS__) != DYNSTR_OK) return 1
+#define dynstr_append_or_ret_nonzero(...) \
+   do {if (dynstr_append(__VA_ARGS__) != DYNSTR_OK) return 1;} while (0)
 
 /**
  * Dynamic string type used for this library.
