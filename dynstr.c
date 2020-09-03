@@ -141,6 +141,6 @@ void dynstr_free(struct dynstr *const d)
     if (d->str)
     {
         free(d->str);
-        memset(d, 0, sizeof *d);
+        dynstr_init(d);
     }
 }

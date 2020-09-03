@@ -131,9 +131,11 @@ enum dynstr_err dynstr_dup(struct dynstr *dst, const struct dynstr *src);
 /**
  * This function frees memory used by the dynamic string.
  * @param d Dynamic string to be freed.
- * @attention Attempting to call this function on an uninitialized or empty
- * instance is undefined behaviour.
- * @attention Parameters inside the struct are reset once memory is freed.
+ * @note This function does nothing on empty, initialized instances.
+ * @attention Calling this function on an uninitialized instance leads to
+ * undefined behaviour.
+ * @attention Once memory is freed, @ref dynstr_init is called so it can be
+ * used again.
  */
 void dynstr_free(struct dynstr *d);
 
