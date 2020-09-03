@@ -42,7 +42,11 @@
 /**
  * Convenience macro that calls dynstr_append and returns its error code if failed.
  */
-#define dynstr_append_or_ret(...) {const enum dynstr_err err = dynstr_append(__VA_ARGS__); if (err != DYNSTR_OK) return err;}
+#define dynstr_append_or_ret(...) \
+   { \
+      const enum dynstr_err err = dynstr_append(__VA_ARGS__);  \
+      if (err != DYNSTR_OK) return err; \
+   }
 
 /**
  * Convenience macro that calls dynstr_append and returns zero if failed.
