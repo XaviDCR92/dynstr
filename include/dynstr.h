@@ -65,8 +65,11 @@ struct dynstr
 
 /**
  * List of errors that this library might return.
- * @note If using GNU C extensions, this errors can be translated into other
- * types by using the convenience macros above.
+ * @note Following the tradition, success code is guaranteed to always be
+ * zero.
+ * @attention Error codes are guaranteed to be non-zero, but their ordering
+ * might change, so please use descriptive error names instead of their integer
+ * equivalents.
  */
 enum dynstr_err
 {
@@ -77,8 +80,10 @@ enum dynstr_err
 };
 
 /**
- * Reportedly, it initializes an empty string with zero length.
- * @attention Always call this function when creating a dynstr instance.
+ * This function initializes string pointer to NULL and sets zero length.
+ * @attention Always call this function before using an instance.
+ * For future compatibility, please avoid initializing instances by calling
+ * @c memset or similar and use this function instead.
  * @param d Dynamic string to be initialized.
  */
 void dynstr_init(struct dynstr *d);
@@ -116,7 +121,8 @@ enum dynstr_err dynstr_prepend(struct dynstr *d, const char *format, ...);
  * @return Returns one of the following error codes:
  *    # DYNSTR_OK if successful.
  *    # DYNSTR_ERR_ALLOC if no more memory is available.
- *    # DYNSTR_ERR_INIT if destination dynamic string was not initialized.
+ *    # DYNSTR_ERR_INIT if destination dynamic string was either not
+ *      initialized or already contains data.
  *    # DYNSTR_ERR_SRC if source dynamic string has no length or data.
  * @note This function has the same effect as calling:
  * @code
