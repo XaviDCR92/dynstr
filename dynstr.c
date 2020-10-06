@@ -30,33 +30,34 @@ void dynstr_init(struct dynstr *const d)
     memset(d, 0, sizeof *d);
 }
 
+enum dynstr_err dynstr_vappend(struct dynstr *const d, const char *const format, va_list ap)
+{
+    enum dynstr_err err = DYNSTR_OK;
+    const size_t src_len = vsnprintf(NULL, 0, format, ap);
+    const size_t new_len = d->len + src_len + 1;
+
+    d->str = realloc(d->str, new_len * sizeof *d->str);
+
+    if (d->str)
+    {
+        vsprintf(d->str + d->len, format, ap);
+        d->len += src_len;
+    }
+    else
+    {
+        err = DYNSTR_ERR_ALLOC;
+    }
+
+    va_end(ap);
+    return err;
+}
+
 enum dynstr_err dynstr_append(struct dynstr *const d, const char *const format, ...)
 {
     va_list ap;
 
     va_start(ap, format);
-
-    {
-        const size_t src_len = vsnprintf(NULL, 0, format, ap);
-        const size_t new_len = d->len + src_len + 1;
-        va_end(ap);
-
-        d->str = realloc(d->str, new_len * sizeof *d->str);
-
-        if (d->str)
-        {
-            va_start(ap, format);
-            vsprintf(d->str + d->len, format, ap);
-            va_end(ap);
-            d->len += src_len;
-        }
-        else
-        {
-            return DYNSTR_ERR_ALLOC;
-        }
-    }
-
-    return DYNSTR_OK;
+    return dynstr_vappend(d, format, ap);
 }
 
 enum dynstr_err dynstr_prepend(struct dynstr *const d, const char *const format, ...)

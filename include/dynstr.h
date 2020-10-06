@@ -21,6 +21,7 @@
 #error C99 support is mandatory for dynstr
 #endif /* __STDC_VERSION < 199901L */
 
+#include <stdarg.h>
 #include <stddef.h>
 #include <stdbool.h>
 
@@ -107,6 +108,19 @@ void dynstr_init(struct dynstr *d);
  *    # DYNSTR_ERR_ALLOC if no more memory is available.
  */
 enum dynstr_err dynstr_append(struct dynstr *d, const char *format, ...);
+
+/**
+ * This function takes a string literal in printf format and a variable
+ * argument list, calculates its size and concatenates it into the
+ * dynamic string.
+ * @param d Dynamic string where new string will be appended.
+ * @param format String literal in printf format.
+ * @param ap Variable argument list.
+ * @return Returns one of the following error codes:
+ *    # DYNSTR_OK if successful.
+ *    # DYNSTR_ERR_ALLOC if no more memory is available.
+ */
+enum dynstr_err dynstr_vappend(struct dynstr *d, const char *format, va_list ap);
 
 /**
  * This function takes a string literal in printf format and a variable
