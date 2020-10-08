@@ -163,10 +163,11 @@ void dynstr_free(struct dynstr *d);
  * Convenience macro that calls dynstr_append and returns its error code if failed.
  */
 #define dynstr_append_or_ret(...) \
+   do \
    { \
       const enum dynstr_err err = dynstr_append(__VA_ARGS__);  \
       if (err != DYNSTR_OK) return err; \
-   }
+   } while (0)
 
 /**
  * Convenience macro that calls dynstr_append and returns zero if failed.
@@ -196,10 +197,11 @@ void dynstr_free(struct dynstr *d);
  * Convenience macro that calls dynstr_prepend and returns its error code if failed.
  */
 #define dynstr_prepend_or_ret(...) \
+   do \
    { \
       const enum dynstr_err err = dynstr_prepend(__VA_ARGS__);  \
       if (err != DYNSTR_OK) return err; \
-   }
+   } while (0)
 
 /**
  * Convenience macro that calls dynstr_prepend and returns zero if failed.
