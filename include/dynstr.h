@@ -135,6 +135,19 @@ enum dynstr_err dynstr_vappend(struct dynstr *d, const char *format, va_list ap)
 enum dynstr_err dynstr_prepend(struct dynstr *d, const char *format, ...);
 
 /**
+ * This function takes a string literal in printf format and a variable
+ * argument list, calculates its size and prepends it into the beginning of the
+ * dynamic string.
+ * @param d Dynamic string where new string will be prepended.
+ * @param format String literal in printf format.
+ * @param ap Variable argument list.
+ * @return Returns one of the following error codes:
+ *    # DYNSTR_OK if successful.
+ *    # DYNSTR_ERR_ALLOC if no more memory is available.
+ */
+enum dynstr_err dynstr_vprepend(struct dynstr *d, const char *format, va_list ap);
+
+/**
  * This function duplicates a dynamic string to another instance.
  * @attention Destination instance must be initialized before calling
  * this function.

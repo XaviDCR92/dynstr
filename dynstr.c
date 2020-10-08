@@ -60,49 +60,46 @@ enum dynstr_err dynstr_append(struct dynstr *const d, const char *const format, 
     return dynstr_vappend(d, format, ap);
 }
 
+enum dynstr_err dynstr_vprepend(struct dynstr *const d, const char *const format, va_list ap)
+{
+    const size_t src_len = vsnprintf(NULL, 0, format, ap);
+    const size_t new_len = d->len + src_len + 1;
+
+    d->str = realloc(d->str, new_len * sizeof *d->str);
+
+    if (d->str && d->len)
+    {
+        /* Keep byte that will be removed by later call to vsprintf. */
+        const char c = *d->str;
+
+        for (size_t i = new_len - 1, j = d->len; j <= d->len; i--, j--)
+        {
+            d->str[i] = d->str[j];
+        }
+
+        vsprintf(d->str, format, ap);
+        d->str[src_len] = c;
+    }
+    else if (!d->len)
+    {
+        vsprintf(d->str + d->len, format, ap);
+    }
+    else
+    {
+        return DYNSTR_ERR_ALLOC;
+    }
+
+    va_end(ap);
+    d->len += src_len;
+    return DYNSTR_OK;
+}
+
 enum dynstr_err dynstr_prepend(struct dynstr *const d, const char *const format, ...)
 {
     va_list ap;
 
     va_start(ap, format);
-
-    {
-        const size_t src_len = vsnprintf(NULL, 0, format, ap);
-        const size_t new_len = d->len + src_len + 1;
-        va_end(ap);
-
-        d->str = realloc(d->str, new_len * sizeof *d->str);
-
-        if (d->str && d->len)
-        {
-            /* Keep byte that will be removed by later call to vsprintf. */
-            const char c = *d->str;
-
-            for (size_t i = new_len - 1, j = d->len; j <= d->len; i--, j--)
-            {
-                d->str[i] = d->str[j];
-            }
-
-            va_start(ap, format);
-            vsprintf(d->str, format, ap);
-            va_end(ap);
-            d->str[src_len] = c;
-        }
-        else if (!d->len)
-        {
-            va_start(ap, format);
-            vsprintf(d->str + d->len, format, ap);
-            va_end(ap);
-        }
-        else
-        {
-            return DYNSTR_ERR_ALLOC;
-        }
-
-        d->len += src_len;
-    }
-
-    return DYNSTR_OK;
+    return dynstr_vprepend(d, format, ap);
 }
 
 enum dynstr_err dynstr_dup(struct dynstr *const dst, const struct dynstr *const src)
