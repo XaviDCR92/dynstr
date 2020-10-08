@@ -25,75 +25,6 @@
 #include <stddef.h>
 #include <stdbool.h>
 
-/* Since dynstr_append() might fail (as it is based on dynamic memory
- * allocation), these macros can be used to avoid boilerplate code. */
-
-/**
- * Convenience macro that calls dynstr_append and returns NULL if failed.
- */
-#define dynstr_append_or_ret_null(...) \
-   do {if (dynstr_append(__VA_ARGS__) != DYNSTR_OK) return NULL;} while (0)
-
-/**
- * Convenience macro that calls dynstr_append and returns false if failed.
- */
-#define dynstr_append_or_ret_false(...) \
-   do {if (dynstr_append(__VA_ARGS__) != DYNSTR_OK) return false;} while (0)
-
-/**
- * Convenience macro that calls dynstr_append and returns its error code if failed.
- */
-#define dynstr_append_or_ret(...) \
-   { \
-      const enum dynstr_err err = dynstr_append(__VA_ARGS__);  \
-      if (err != DYNSTR_OK) return err; \
-   }
-
-/**
- * Convenience macro that calls dynstr_append and returns zero if failed.
- */
-#define dynstr_append_or_ret_zero(...) \
-   do {if (dynstr_append(__VA_ARGS__) != DYNSTR_OK) return 0;} while (0)
-
-/**
- * Convenience macro that calls dynstr_append and returns one if failed.
- */
-#define dynstr_append_or_ret_nonzero(...) \
-   do {if (dynstr_append(__VA_ARGS__) != DYNSTR_OK) return 1;} while (0)
-
-/**
- * Convenience macro that calls dynstr_prepend and returns NULL if failed.
- */
-#define dynstr_prepend_or_ret_null(...) \
-   do {if (dynstr_prepend(__VA_ARGS__) != DYNSTR_OK) return NULL;} while (0)
-
-/**
- * Convenience macro that calls dynstr_prepend and returns false if failed.
- */
-#define dynstr_prepend_or_ret_false(...) \
-   do {if (dynstr_prepend(__VA_ARGS__) != DYNSTR_OK) return false;} while (0)
-
-/**
- * Convenience macro that calls dynstr_prepend and returns its error code if failed.
- */
-#define dynstr_prepend_or_ret(...) \
-   { \
-      const enum dynstr_err err = dynstr_prepend(__VA_ARGS__);  \
-      if (err != DYNSTR_OK) return err; \
-   }
-
-/**
- * Convenience macro that calls dynstr_prepend and returns zero if failed.
- */
-#define dynstr_prepend_or_ret_zero(...) \
-   do {if (dynstr_prepend(__VA_ARGS__) != DYNSTR_OK) return 0;} while (0)
-
-/**
- * Convenience macro that calls dynstr_prepend and returns one if failed.
- */
-#define dynstr_prepend_or_ret_nonzero(...) \
-   do {if (dynstr_prepend(__VA_ARGS__) != DYNSTR_OK) return 1;} while (0)
-
 /**
  * Dynamic string type used for this library.
  * @note If needed, members can be safely read but should not be modified
@@ -212,5 +143,74 @@ enum dynstr_err dynstr_dup(struct dynstr *dst, const struct dynstr *src);
  * used again.
  */
 void dynstr_free(struct dynstr *d);
+
+/* Since dynstr_append() might fail (as it is based on dynamic memory
+ * allocation), these macros can be used to avoid boilerplate code. */
+
+/**
+ * Convenience macro that calls dynstr_append and returns NULL if failed.
+ */
+#define dynstr_append_or_ret_null(...) \
+   do {if (dynstr_append(__VA_ARGS__) != DYNSTR_OK) return NULL;} while (0)
+
+/**
+ * Convenience macro that calls dynstr_append and returns false if failed.
+ */
+#define dynstr_append_or_ret_false(...) \
+   do {if (dynstr_append(__VA_ARGS__) != DYNSTR_OK) return false;} while (0)
+
+/**
+ * Convenience macro that calls dynstr_append and returns its error code if failed.
+ */
+#define dynstr_append_or_ret(...) \
+   { \
+      const enum dynstr_err err = dynstr_append(__VA_ARGS__);  \
+      if (err != DYNSTR_OK) return err; \
+   }
+
+/**
+ * Convenience macro that calls dynstr_append and returns zero if failed.
+ */
+#define dynstr_append_or_ret_zero(...) \
+   do {if (dynstr_append(__VA_ARGS__) != DYNSTR_OK) return 0;} while (0)
+
+/**
+ * Convenience macro that calls dynstr_append and returns one if failed.
+ */
+#define dynstr_append_or_ret_nonzero(...) \
+   do {if (dynstr_append(__VA_ARGS__) != DYNSTR_OK) return 1;} while (0)
+
+/**
+ * Convenience macro that calls dynstr_prepend and returns NULL if failed.
+ */
+#define dynstr_prepend_or_ret_null(...) \
+   do {if (dynstr_prepend(__VA_ARGS__) != DYNSTR_OK) return NULL;} while (0)
+
+/**
+ * Convenience macro that calls dynstr_prepend and returns false if failed.
+ */
+#define dynstr_prepend_or_ret_false(...) \
+   do {if (dynstr_prepend(__VA_ARGS__) != DYNSTR_OK) return false;} while (0)
+
+/**
+ * Convenience macro that calls dynstr_prepend and returns its error code if failed.
+ */
+#define dynstr_prepend_or_ret(...) \
+   { \
+      const enum dynstr_err err = dynstr_prepend(__VA_ARGS__);  \
+      if (err != DYNSTR_OK) return err; \
+   }
+
+/**
+ * Convenience macro that calls dynstr_prepend and returns zero if failed.
+ */
+#define dynstr_prepend_or_ret_zero(...) \
+   do {if (dynstr_prepend(__VA_ARGS__) != DYNSTR_OK) return 0;} while (0)
+
+/**
+ * Convenience macro that calls dynstr_prepend and returns one if failed.
+ */
+#define dynstr_prepend_or_ret_nonzero(...) \
+   do {if (dynstr_prepend(__VA_ARGS__) != DYNSTR_OK) return 1;} while (0)
 
 #endif /* DYNSTR_H */
