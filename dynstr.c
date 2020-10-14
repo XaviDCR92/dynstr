@@ -33,73 +33,92 @@ void dynstr_init(struct dynstr *const d)
 enum dynstr_err dynstr_vappend(struct dynstr *const d, const char *const format, va_list ap)
 {
     enum dynstr_err err = DYNSTR_OK;
-    const size_t src_len = vsnprintf(NULL, 0, format, ap);
-    const size_t new_len = d->len + src_len + 1;
+    va_list apc;
 
-    d->str = realloc(d->str, new_len * sizeof *d->str);
+    va_copy(apc, ap);
 
-    if (d->str)
     {
-        vsprintf(d->str + d->len, format, ap);
-        d->len += src_len;
-    }
-    else
-    {
-        err = DYNSTR_ERR_ALLOC;
+        const size_t src_len = vsnprintf(NULL, 0, format, ap);
+        const size_t new_len = d->len + src_len + 1;
+
+        d->str = realloc(d->str, new_len * sizeof *d->str);
+
+        if (d->str)
+        {
+            vsprintf(d->str + d->len, format, apc);
+            d->len += src_len;
+        }
+        else
+        {
+            err = DYNSTR_ERR_ALLOC;
+        }
     }
 
-    va_end(ap);
+    va_end(apc);
     return err;
 }
 
 enum dynstr_err dynstr_append(struct dynstr *const d, const char *const format, ...)
 {
     va_list ap;
+    enum dynstr_err err;
 
     va_start(ap, format);
-    return dynstr_vappend(d, format, ap);
+    err = dynstr_vappend(d, format, ap);
+    va_end(ap);
+    return err;
 }
 
 enum dynstr_err dynstr_vprepend(struct dynstr *const d, const char *const format, va_list ap)
 {
-    const size_t src_len = vsnprintf(NULL, 0, format, ap);
-    const size_t new_len = d->len + src_len + 1;
+    enum dynstr_err err = DYNSTR_OK;
+    va_list apc;
 
-    d->str = realloc(d->str, new_len * sizeof *d->str);
+    va_copy(apc, ap);
 
-    if (d->str && d->len)
     {
-        /* Keep byte that will be removed by later call to vsprintf. */
-        const char c = *d->str;
+        const size_t src_len = vsnprintf(NULL, 0, format, ap);
+        const size_t new_len = d->len + src_len + 1;
 
-        for (size_t i = new_len - 1, j = d->len; j <= d->len; i--, j--)
+        d->str = realloc(d->str, new_len * sizeof *d->str);
+
+        if (d->str && d->len)
         {
-            d->str[i] = d->str[j];
+            /* Keep byte that will be removed by later call to vsprintf. */
+            const char c = *d->str;
+
+            for (size_t i = new_len - 1, j = d->len; j <= d->len; i--, j--)
+            {
+                d->str[i] = d->str[j];
+            }
+
+            vsprintf(d->str, format, apc);
+            d->str[src_len] = c;
+        }
+        else if (!d->len)
+        {
+            vsprintf(d->str + d->len, format, apc);
+        }
+        else
+        {
+            err = DYNSTR_ERR_ALLOC;
         }
 
-        vsprintf(d->str, format, ap);
-        d->str[src_len] = c;
-    }
-    else if (!d->len)
-    {
-        vsprintf(d->str + d->len, format, ap);
-    }
-    else
-    {
-        return DYNSTR_ERR_ALLOC;
+        d->len += src_len;
     }
 
-    va_end(ap);
-    d->len += src_len;
-    return DYNSTR_OK;
+    va_end(apc);
+    return err;
 }
 
 enum dynstr_err dynstr_prepend(struct dynstr *const d, const char *const format, ...)
 {
     va_list ap;
+    enum dynstr_err err;
 
     va_start(ap, format);
-    return dynstr_vprepend(d, format, ap);
+    err = dynstr_vprepend(d, format, ap);
+    return err;
 }
 
 enum dynstr_err dynstr_dup(struct dynstr *const dst, const struct dynstr *const src)
