@@ -178,9 +178,6 @@ enum dynstr_err dynstr_dup(struct dynstr *const dst, const struct dynstr *const 
 
 void dynstr_free(struct dynstr *const d)
 {
-    if (d->str)
-    {
-        free(d->str);
-        dynstr_init(d);
-    }
+    free(d->str);
+    dynstr_init(d);
 }
