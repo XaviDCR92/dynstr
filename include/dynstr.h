@@ -49,7 +49,8 @@ enum dynstr_err
    DYNSTR_OK, /**< Operation was successful. */
    DYNSTR_ERR_ALLOC, /**< Alloc operation failed. */
    DYNSTR_ERR_INIT, /**< Dynamic string was not initialized. */
-   DYNSTR_ERR_SRC /**< Source string has invalid parameters. */
+   DYNSTR_ERR_SRC, /**< Source string has invalid parameters. */
+   DYNSTR_ERR_PRINTF /** Internal call to (vsn)printf(3) failed. */
 };
 
 /**

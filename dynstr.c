@@ -38,19 +38,33 @@ enum dynstr_err dynstr_vappend(struct dynstr *const d, const char *const format,
     va_copy(apc, ap);
 
     {
-        const size_t src_len = vsnprintf(NULL, 0, format, ap);
-        const size_t new_len = d->len + src_len + 1;
+        const int src_len = vsnprintf(NULL, 0, format, ap);
 
-        d->str = realloc(d->str, new_len * sizeof *d->str);
-
-        if (d->str)
+        if (src_len >= 0)
         {
-            vsprintf(d->str + d->len, format, apc);
-            d->len += src_len;
+            const size_t new_len = d->len + src_len + 1;
+
+            d->str = realloc(d->str, new_len * sizeof *d->str);
+
+            if (d->str)
+            {
+                if (vsprintf(d->str + d->len, format, apc) >= 0)
+                {
+                    d->len += src_len;
+                }
+                else
+                {
+                    err = DYNSTR_ERR_PRINTF;
+                }
+            }
+            else
+            {
+                err = DYNSTR_ERR_ALLOC;
+            }
         }
         else
         {
-            err = DYNSTR_ERR_ALLOC;
+            err = DYNSTR_ERR_PRINTF;
         }
     }
 
@@ -92,12 +106,21 @@ enum dynstr_err dynstr_vprepend(struct dynstr *const d, const char *const format
                 d->str[i] = d->str[j];
             }
 
-            vsprintf(d->str, format, apc);
-            d->str[src_len] = c;
+            if (vsprintf(d->str, format, apc) >= 0)
+            {
+                d->str[src_len] = c;
+            }
+            else
+            {
+                err = DYNSTR_ERR_PRINTF;
+            }
         }
         else if (!d->len)
         {
-            vsprintf(d->str + d->len, format, apc);
+            if (vsprintf(d->str + d->len, format, apc) < 0)
+            {
+                err = DYNSTR_ERR_PRINTF;
+            }
         }
         else
         {
