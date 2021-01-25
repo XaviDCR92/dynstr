@@ -32,8 +32,8 @@
  */
 struct dynstr
 {
-   char *str; /**< Null-terminated string. */
-   size_t len; /**< String length, null character not included. */
+    char *str; /**< Null-terminated string. */
+    size_t len; /**< String length, null character not included. */
 };
 
 /**
@@ -46,11 +46,11 @@ struct dynstr
  */
 enum dynstr_err
 {
-   DYNSTR_OK, /**< Operation was successful. */
-   DYNSTR_ERR_ALLOC, /**< Alloc operation failed. */
-   DYNSTR_ERR_INIT, /**< Dynamic string was not initialized. */
-   DYNSTR_ERR_SRC, /**< Source string has invalid parameters. */
-   DYNSTR_ERR_PRINTF /** Internal call to (vsn)printf(3) failed. */
+    DYNSTR_OK, /**< Operation was successful. */
+    DYNSTR_ERR_ALLOC, /**< Alloc operation failed. */
+    DYNSTR_ERR_INIT, /**< Dynamic string was not initialized. */
+    DYNSTR_ERR_SRC, /**< Source string has invalid parameters. */
+    DYNSTR_ERR_PRINTF /** Internal call to (vsn)printf(3) failed. */
 };
 
 /**
@@ -152,68 +152,68 @@ void dynstr_free(struct dynstr *d);
  * Convenience macro that calls dynstr_append and returns NULL if failed.
  */
 #define dynstr_append_or_ret_null(...) \
-   do {if (dynstr_append(__VA_ARGS__) != DYNSTR_OK) return NULL;} while (0)
+    do {if (dynstr_append(__VA_ARGS__) != DYNSTR_OK) return NULL;} while (0)
 
 /**
  * Convenience macro that calls dynstr_append and returns false if failed.
  */
 #define dynstr_append_or_ret_false(...) \
-   do {if (dynstr_append(__VA_ARGS__) != DYNSTR_OK) return false;} while (0)
+    do {if (dynstr_append(__VA_ARGS__) != DYNSTR_OK) return false;} while (0)
 
 /**
  * Convenience macro that calls dynstr_append and returns its error code if failed.
  */
 #define dynstr_append_or_ret(...) \
-   do \
-   { \
-      const enum dynstr_err err = dynstr_append(__VA_ARGS__);  \
-      if (err != DYNSTR_OK) return err; \
-   } while (0)
+    do \
+    { \
+        const enum dynstr_err err = dynstr_append(__VA_ARGS__);  \
+        if (err != DYNSTR_OK) return err; \
+    } while (0)
 
 /**
  * Convenience macro that calls dynstr_append and returns zero if failed.
  */
 #define dynstr_append_or_ret_zero(...) \
-   do {if (dynstr_append(__VA_ARGS__) != DYNSTR_OK) return 0;} while (0)
+    do {if (dynstr_append(__VA_ARGS__) != DYNSTR_OK) return 0;} while (0)
 
 /**
  * Convenience macro that calls dynstr_append and returns one if failed.
  */
 #define dynstr_append_or_ret_nonzero(...) \
-   do {if (dynstr_append(__VA_ARGS__) != DYNSTR_OK) return 1;} while (0)
+    do {if (dynstr_append(__VA_ARGS__) != DYNSTR_OK) return 1;} while (0)
 
 /**
  * Convenience macro that calls dynstr_prepend and returns NULL if failed.
  */
 #define dynstr_prepend_or_ret_null(...) \
-   do {if (dynstr_prepend(__VA_ARGS__) != DYNSTR_OK) return NULL;} while (0)
+    do {if (dynstr_prepend(__VA_ARGS__) != DYNSTR_OK) return NULL;} while (0)
 
 /**
  * Convenience macro that calls dynstr_prepend and returns false if failed.
  */
 #define dynstr_prepend_or_ret_false(...) \
-   do {if (dynstr_prepend(__VA_ARGS__) != DYNSTR_OK) return false;} while (0)
+    do {if (dynstr_prepend(__VA_ARGS__) != DYNSTR_OK) return false;} while (0)
 
 /**
  * Convenience macro that calls dynstr_prepend and returns its error code if failed.
  */
 #define dynstr_prepend_or_ret(...) \
-   do \
-   { \
-      const enum dynstr_err err = dynstr_prepend(__VA_ARGS__);  \
-      if (err != DYNSTR_OK) return err; \
-   } while (0)
+    do \
+    { \
+        const enum dynstr_err err = dynstr_prepend(__VA_ARGS__);  \
+        if (err != DYNSTR_OK) return err; \
+    } while (0)
 
 /**
  * Convenience macro that calls dynstr_prepend and returns zero if failed.
  */
 #define dynstr_prepend_or_ret_zero(...) \
-   do {if (dynstr_prepend(__VA_ARGS__) != DYNSTR_OK) return 0;} while (0)
+    do {if (dynstr_prepend(__VA_ARGS__) != DYNSTR_OK) return 0;} while (0)
 
 /**
  * Convenience macro that calls dynstr_prepend and returns one if failed.
  */
 #define dynstr_prepend_or_ret_nonzero(...) \
-   do {if (dynstr_prepend(__VA_ARGS__) != DYNSTR_OK) return 1;} while (0)
+    do {if (dynstr_prepend(__VA_ARGS__) != DYNSTR_OK) return 1;} while (0)
 
 #endif /* DYNSTR_H */
